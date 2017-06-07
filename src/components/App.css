@@ -1,0 +1,11 @@
+.vcenter {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+
+@media (max-width: 575px) {
+    .navbar-toggleable > .container {
+        width: 100%;
+    }
+}
