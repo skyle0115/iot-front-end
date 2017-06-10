@@ -1,8 +1,8 @@
 import {combineReducers} from 'redux';
 import {overview, report} from './current';
 import devices from './devices';
-import settings from './settings';
+import target from './target';
 
-const rootReducer = combineReducers({overview, report, devices, settings});
+const rootReducer = combineReducers({overview, report, devices, target});
 
 export default rootReducer;

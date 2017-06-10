@@ -17,19 +17,13 @@ import ReportItem from './ReportItem';
 var YEAR = [
         2016, 2017
     ],
-    MONTH = [],
-    DAY = [];
+    MONTH = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    DAY = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
 
 class Report extends Component {
 
     constructor(props) {
         super(props);
-
-        for (let i = 1; i <= 12; i++)
-            MONTH.push(i);
-        for (let i = 1; i <= 31; i++)
-            DAY.push(i);
-
         let year = moment().year(),
             month = moment().month() + 1,
             date = moment().date();

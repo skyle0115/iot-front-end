@@ -36,8 +36,11 @@ class Overview extends Component {
     }
 
     render() {
+        const {overviewType} = this.state;
         const {overview} = this.props;
-        const rest = this.props.settings.month_target - _.sumBy(overview, ele => ele.kWh);
+        const {day_target, month_target, year_target} = this.props.target;
+        const target = overviewType === '日' ? day_target : overviewType === '月' ? month_target : year_target;
+        const rest = Math.round((target - _.sumBy(overview, ele => ele.kWh)) * 10) / 10;
         const data = [
             {
                 name: '剩餘',
@@ -94,8 +97,8 @@ class Overview extends Component {
     }
 }
 
-function mapStateToProps({overview, settings}) {
-    return {overview, settings};
+function mapStateToProps({overview, target}) {
+    return {overview, target};
 }
 
 function mapDispatchToProps(dispatch) {

@@ -14,8 +14,6 @@ export function getOverview(type) {
                 : today;
         let start = new Date(`${start_day} 00:00:00`).getTime(),
             end = new Date(moment().format('YYYY/MM/DD hh:mm:ss')).getTime();
-        console.log(`${today} 00:00:00`);
-        console.log(moment().format('YYYY/MM/DD hh:mm:ss'));
         let {devices} = getState();
         let devices_num = devices.length;
         let fecthed_num = 0;
@@ -95,7 +93,6 @@ export function getReport(type, start, end) {
 
                 fecthed_num++;
                 if (fecthed_num === devices_num) {
-                    console.log(payload);
                     dispatch({type: `@REPORT/GET_${type}`, payload});
                 }
             });

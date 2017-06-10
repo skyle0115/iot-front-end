@@ -15,7 +15,7 @@ export default class ReportItem extends Component {
     renderLine(name) {
         let lines = [];
         for (let deviceId in name) {
-            lines.push(<Line type="monotone" name={name[deviceId]} dataKey={deviceId} stroke="#8884d8"/>);
+            lines.push(<Line key={deviceId} type="monotone" name={name[deviceId]} dataKey={deviceId} stroke="#8884d8"/>);
         }
         return lines;
     }

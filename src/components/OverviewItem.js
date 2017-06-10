@@ -26,7 +26,7 @@ export default class OverviewItem extends Component {
                             </AreaChart>
                         </ResponsiveContainer>
                         <CardBlock style={{position: 'absolute', width: '100%'}}>
-                            <CardTitle>{`${title}：${value}度`}</CardTitle>
+                            <CardTitle>{`${title}：${value} 度`}</CardTitle>
                         </CardBlock>
                     </Card>
                 </Col>

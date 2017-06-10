@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Link} from 'react-router-dom';
 import {
     Collapse,
     Navbar,
@@ -38,17 +38,17 @@ export default class App extends Component {
                     <Navbar color="faded" light toggleable>
                         <div className="container">
                             <NavbarToggler right onClick={this.navbarToggle}/>
-                            <NavbarBrand href="/"><i className="fa fa-lg fa-lightbulb-o" aria-hidden="true"></i> 智慧電表</NavbarBrand>
+                            <NavbarBrand tag={Link} to='/'><i className="fa fa-lg fa-lightbulb-o" aria-hidden="true"></i> 智慧電表</NavbarBrand>
                             <Collapse isOpen={this.state.isOpen} navbar>
                                 <Nav className="ml-auto" navbar>
                                     <NavItem>
-                                        <NavLink href="/">總覽</NavLink>
+                                        <NavLink tag={Link} to='/'>總覽</NavLink>
                                     </NavItem>
                                     <NavItem>
-                                        <NavLink href="/report">報表</NavLink>
+                                        <NavLink tag={Link} to='/report'>報表</NavLink>
                                     </NavItem>
                                     <NavItem>
-                                        <NavLink href="/settings">設定</NavLink>
+                                        <NavLink tag={Link} to='/settings'>設定</NavLink>
                                     </NavItem>
                                 </Nav>
                             </Collapse>
