@@ -48,7 +48,6 @@ class Settings extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps);
         this.setState({
             ...nextProps.target
         });
