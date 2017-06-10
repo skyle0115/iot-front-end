@@ -5,56 +5,28 @@ import {
     Col,
     Row,
     Card,
-    CardImg,
-    CardText,
     CardBlock,
-    CardTitle,
-    CardSubtitle,
-    Button
+    CardTitle
 } from 'reactstrap';
-
-const data = [
-    {
-        name: '11:00',
-        value: 1
-    }, {
-        name: '11:15',
-        value: 0.8
-    }, {
-        name: '11:30',
-        value: 1.2
-    }, {
-        name: '11:45',
-        value: 1.2
-    }, {
-        name: '12:00',
-        value: 0.8
-    }
-];
 
 export default class OverviewItem extends Component {
     render() {
+        const {inverse, color, data, title, value} = this.props;
+
         return (
             <Row className="mb-3">
                 <Col md={{
                     size: 4,
                     offset: 4
                 }}>
-                    <Card inverse={this.props.inverse} color={this.props.color}>
-                        <CardBlock>
-                            <Row>
-                                <Col>
-                                    <ResponsiveContainer width="100%" height={50}>
-                                        <AreaChart data={data}>
-                                            <Area type='monotone' dataKey='value' stroke='#fff' fill='#fff'/>
-                                        </AreaChart>
-                                    </ResponsiveContainer>
-                                </Col>
-                                <Col className="text-right">
-                                    <CardTitle>電風扇</CardTitle>
-                                    <CardSubtitle>12</CardSubtitle>
-                                </Col>
-                            </Row>
+                    <Card inverse={inverse} style={{border: 0}} color={color}>
+                        <ResponsiveContainer width="100%" height={100}>
+                            <AreaChart data={data} margin={{top: 60, right: 0, bottom: 0, left: 0}}>
+                                <Area type='monotone' dataKey='value' stroke='#fff' fill='#fff'/>
+                            </AreaChart>
+                        </ResponsiveContainer>
+                        <CardBlock style={{position: 'absolute', width: '100%'}}>
+                            <CardTitle>{`${title}：${value}度`}</CardTitle>
                         </CardBlock>
                     </Card>
                 </Col>

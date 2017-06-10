@@ -1,68 +1,27 @@
 import React, {Component} from 'react';
-import {
-    PieChart,
-    Pie,
-    LineChart,
-    Line,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend,
-    AreaChart,
-    Area,
-    ResponsiveContainer,
-    Cell
-} from 'recharts';
-import {
-    Col,
-    Row,
-    Card,
-    CardImg,
-    CardText,
-    CardBlock,
-    CardTitle,
-    CardSubtitle,
-    Button,
-    CardImgOverlay,
-    CardHeader,
-    Dropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem
-} from 'reactstrap';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import _ from 'lodash';
+import {PieChart, Pie, Tooltip, Cell} from 'recharts';
+import {Col, Row, Card, CardBlock, CardHeader} from 'reactstrap';
+
+import {getOverview} from '../actions/current';
 import OverviewItem from './OverviewItem';
+import ComboBox from './ComboBox';
 
-const data02 = [
-    {
-        name: '剩餘電量',
-        value: 20
-    }, {
-        name: '冷氣',
-        value: 100
-    }, {
-        name: '電風扇',
-        value: 200
-    }, {
-        name: '充電器',
-        value: 100
-    }, {
-        name: '電視',
-        value: 80
-    }, {
-        name: '洗衣機',
-        value: 40
-    }
-]
-
-export default class Overview extends Component {
+class Overview extends Component {
     constructor(props) {
         super(props);
 
         this.dropdownToggle = this.dropdownToggle.bind(this);
         this.state = {
-            dropdownOpen: false
+            dropdownOpen: false,
+            overviewType: '日'
         };
+    }
+
+    componentWillMount() {
+        this.props.getOverview('日');
     }
 
     dropdownToggle() {
@@ -71,7 +30,21 @@ export default class Overview extends Component {
         });
     }
 
+    overviewOnChange(value) {
+        this.setState({overviewType: value});
+        this.props.getOverview(value);
+    }
+
     render() {
+        const {overview} = this.props;
+        const rest = this.props.settings.month_target - _.sumBy(overview, ele => ele.kWh);
+        const data = [
+            {
+                name: '剩餘',
+                kWh: rest
+            },
+            ...overview
+        ];
         return (
             <div>
                 <Row className="my-3">
@@ -79,7 +52,6 @@ export default class Overview extends Component {
                         size: 4,
                         offset: 4
                     }}>
-
                         <Card>
                             <CardHeader>
                                 <Row>
@@ -89,42 +61,47 @@ export default class Overview extends Component {
                                         }}>總覽</h3>
                                     </Col>
                                     <Col className="text-right">
-                                        <Dropdown isOpen={this.state.dropdownOpen} toggle={this.dropdownToggle}>
-                                            <DropdownToggle caret>
-                                                日
-                                            </DropdownToggle>
-                                            <DropdownMenu>
-                                                <DropdownItem>日</DropdownItem>
-                                                <DropdownItem>月</DropdownItem>
-                                                <DropdownItem>年</DropdownItem>
-                                            </DropdownMenu>
-                                        </Dropdown>
+                                        <ComboBox items={['日', '月', '年']} onChange={value => this.overviewOnChange(value)}/>
                                     </Col>
                                 </Row>
                             </CardHeader>
-                            <div style={{
+                            <CardBlock style={{
                                 marginLeft: 'auto',
                                 marginRight: 'auto'
                             }}>
                                 <PieChart width={200} height={200}>
                                     <text x={100} y={100} textAnchor="middle" dominantBaseline="middle">
-                                        剩餘 12 度
+                                        {`剩餘 ${rest} 度`}
                                     </text>
-                                    <Pie data={data02} nameKey="name" dataKey="value" innerRadius={60} outerRadius={80} fill="#82ca9d">
+                                    <Pie data={data} nameKey="name" dataKey="kWh" innerRadius={60} outerRadius={80} fill="#82ca9d">
                                         <Cell fill="#ededed"/>
                                     </Pie>
                                     <Tooltip/>
                                 </PieChart>
-                            </div>
+                            </CardBlock>
                         </Card>
                     </Col>
                 </Row>
-                <OverviewItem inverse color="danger"/>
-                <OverviewItem inverse color="warning"/>
-                <OverviewItem inverse color="info"/>
-                <OverviewItem inverse color="primary"/>
-
+                {overview.map((ele, idx) => {
+                    const {t_a, name, kWh} = ele;
+                    const color = idx < 3
+                        ? ['danger', 'warning', 'info'][idx]
+                        : 'secondary';
+                    return (<OverviewItem key={idx} data={t_a} title={name} value={kWh} color={color} inverse/>);
+                })}
             </div>
         );
     }
 }
+
+function mapStateToProps({overview, settings}) {
+    return {overview, settings};
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+        getOverview
+    }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Overview);

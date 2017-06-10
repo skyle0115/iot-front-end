@@ -9,7 +9,7 @@ export default class ComboBox extends Component {
         this.onClick = this.onClick.bind(this);
         this.state = {
             dropdownOpen: false,
-            selected: this.props.items[0],
+            selected: this.props.default || this.props.items[0],
         };
     }
 
