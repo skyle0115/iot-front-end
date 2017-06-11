@@ -19,7 +19,7 @@ export default class OverviewItem extends Component {
                     size: 4,
                     offset: 4
                 }}>
-                    <Card inverse={inverse} style={{border: 0}} color={color}>
+                    <Card inverse={inverse} style={{border: 0, backgroundColor: color}}>
                         <ResponsiveContainer width="100%" height={100}>
                             <AreaChart data={data} margin={{top: 60, right: 0, bottom: 0, left: 0}}>
                                 <Area type='monotone' dataKey='value' stroke='#fff' fill='#fff'/>

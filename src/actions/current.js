@@ -2,18 +2,10 @@ import {getCurrent} from '../api/current'
 import _ from 'lodash';
 import moment from 'moment';
 
-export function getOverview(type) {
+export function getOverview(start, end) {
     return ((dispatch, getState) => {
-        let today = moment().format('YYYY/MM/DD'),
-            this_month = moment().format('YYYY/MM') + '/01',
-            this_year = moment().format('YYYY') + '/01/01';
-        let start_day = type === '年'
-            ? this_year
-            : type === '月'
-                ? this_month
-                : today;
-        let start = new Date(`${start_day} 00:00:00`).getTime(),
-            end = new Date(moment().format('YYYY/MM/DD hh:mm:ss')).getTime();
+        start = new Date(start).getTime();
+        end = new Date(end).getTime();
         let {devices} = getState();
         let devices_num = devices.length;
         let fecthed_num = 0;
@@ -24,6 +16,7 @@ export function getOverview(type) {
                 let p = {
                     deviceId: device.deviceId,
                     name: device.name,
+                    color: device.color,
                     t_a: [],
                     kWh: 0
                 }
@@ -64,7 +57,7 @@ export function getReport(type, start, end) {
 
         for (let device of devices) {
             getCurrent(device.deviceId, start, end).then(res => {
-                payload.name[device.deviceId] = device.name;
+                payload.name[device.deviceId] = {name: device.name, color: device.color};
                 let current = null;
                 let sum;
 

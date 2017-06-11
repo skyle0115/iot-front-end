@@ -78,7 +78,7 @@ class Report extends Component {
                                 <ComboBox default={this.state.yearEndYear} items={YEAR} onChange={value => this.setState({yearEndYear: value})}/> {' '}
                                 <Button color='primary' onClick={e => this.fetchYear()}>送出</Button>
                             </CardHeader>
-                            <ReportItem data={year}/>
+                            <ReportItem xunit="年" data={year}/>
                         </Card>
                     </Col>
                 </Row>
@@ -95,7 +95,7 @@ class Report extends Component {
                                 <ComboBox default={this.state.monthEndMonth} items={MONTH} onChange={value => this.setState({monthEndMonth: value})}/> {' '}
                                 <Button color='primary' onClick={e => this.fetchMonth()}>送出</Button>
                             </CardHeader>
-                            <ReportItem data={month}/>
+                            <ReportItem xunit="月" data={month}/>
                         </Card>
                     </Col>
                 </Row>
@@ -113,7 +113,7 @@ class Report extends Component {
                                 <ComboBox default={this.state.dayEndDate} items={DAY} onChange={value => this.setState({dayEndDate: value})}/> {' '}
                                 <Button color='primary' onClick={e => this.fetchDay()}>送出</Button>
                             </CardHeader>
-                            <ReportItem data={day}/>
+                            <ReportItem xunit="日" data={day}/>
                         </Card>
                     </Col>
                 </Row>

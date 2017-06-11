@@ -1,18 +1,25 @@
+import randomColor from 'randomcolor';
+
+const luminosity = 'dark', hue = 'random';
+
 const defaultState = [
     {
         id: 0,
         name: '冰箱',
         deviceId: 'DabcDE78',
+        color: randomColor({luminosity, hue}),
         V: 110
     }, {
         id: 1,
         name: '電視',
         deviceId: 'DbzrXH0P',
+        color: randomColor({luminosity, hue}),
         V: 110
     }, {
         id: 2,
         name: '烤箱',
         deviceId: 'DXLQwmnN',
+        color: randomColor({luminosity, hue}),
         V: 220
     }
 ];
@@ -23,6 +30,7 @@ export default function(state = defaultState, action) {
             return [
                 ...state, {
                     id: state.length,
+                    color: randomColor({luminosity, hue}),
                     ...action.payload
                 }
             ];
