@@ -57,19 +57,35 @@ class Overview extends Component {
         this.props.getOverview(overviewStart, overviewEnd);
     }
 
-    renderLegend(overview) {
-        return overview.map(e => {
-            return (
-                <li key={e.color}>
-                    <div className="mr-2" style={{
-                        display: 'inline-block',
-                        width: 10,
-                        height: 10,
-                        backgroundColor: e.color
-                    }}/>
-                    <span>{e.name}</span>
-                </li>
-            );
+    renderLegend(data) {
+        return (
+            <ul style={{
+                listStyleType: 'none',
+                padding: 0,
+                display: 'inline-block'
+            }}>
+                {data.map(e => {
+                    const {id, name, color} = e;
+                    return (
+                        <li key={id}>
+                            <div className="mr-2" style={{
+                                display: 'inline-block',
+                                width: 10,
+                                height: 10,
+                                backgroundColor: color
+                            }}/>
+                            <span>{name}</span>
+                        </li>
+                    );
+                })}
+            </ul>
+        );
+    }
+
+    renderOverview(overview) {
+        return overview.map((ele, idx) => {
+            const {t_a, name, color, kWh} = ele;
+            return (<OverviewItem key={idx} data={t_a} title={name} value={kWh} color={color} inverse/>);
         });
     }
 
@@ -85,8 +101,10 @@ class Overview extends Component {
         const rest = Math.round((target - _.sumBy(overview, ele => ele.kWh)) * 10) / 10;
         const data = [
             {
+                id: -1,
                 name: '剩餘',
-                kWh: rest
+                kWh: rest,
+                color: '#ededed'
             },
             ...overview
         ];
@@ -94,13 +112,13 @@ class Overview extends Component {
             <div>
                 <Row className="my-3">
                     <Col md={{
-                        size: 4,
-                        offset: 4
+                        size: 6,
+                        offset: 3
                     }}>
                         <Card>
                             <CardHeader>
                                 <Row>
-                                    <Col className="vcenter">
+                                    <Col className="my-auto">
                                         <h3 style={{
                                             margin: 0
                                         }}>總覽</h3>
@@ -121,15 +139,11 @@ class Overview extends Component {
                                             {`剩餘 ${rest} 度`}
                                         </text>
                                         <Pie data={data} nameKey="name" dataKey="kWh" innerRadius={60} outerRadius={80} fill="#82ca9d">
-                                            <Cell fill="#ededed"/> {overview.map(e => <Cell key={e.color} fill={e.color}/>)}
+                                            {data.map(e => <Cell key={e.id} fill={e.color}/>)}
                                         </Pie>
                                         <Tooltip/>
                                     </PieChart>
-                                    <ul style={{
-                                        listStyleType: 'none',
-                                        padding: 0,
-                                        display: 'inline-block'
-                                    }}>{this.renderLegend(overview)}</ul>
+                                    {this.renderLegend(data)}
                                 </div>
                             </CardBlock>
                             <CardFooter className="text-muted text-center">
@@ -138,10 +152,7 @@ class Overview extends Component {
                         </Card>
                     </Col>
                 </Row>
-                {overview.map((ele, idx) => {
-                    const {t_a, name, color, kWh} = ele;
-                    return (<OverviewItem key={idx} data={t_a} title={name} value={kWh} color={color} inverse/>);
-                })}
+                {this.renderOverview(overview)}
             </div>
         );
     }

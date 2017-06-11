@@ -13,10 +13,12 @@ export function getOverview(start, end) {
 
         for (let device of devices) {
             getCurrent(device.deviceId, start, end).then(res => {
+                const {deviceId, name, color, id} = device;
                 let p = {
-                    deviceId: device.deviceId,
-                    name: device.name,
-                    color: device.color,
+                    id,
+                    name,
+                    deviceId,
+                    color,
                     t_a: [],
                     kWh: 0
                 }

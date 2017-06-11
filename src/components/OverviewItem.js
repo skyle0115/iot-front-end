@@ -16,8 +16,8 @@ export default class OverviewItem extends Component {
         return (
             <Row className="mb-3">
                 <Col md={{
-                    size: 4,
-                    offset: 4
+                    size: 6,
+                    offset: 3
                 }}>
                     <Card inverse={inverse} style={{border: 0, backgroundColor: color}}>
                         <ResponsiveContainer width="100%" height={100}>

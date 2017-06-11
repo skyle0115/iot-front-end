@@ -38,7 +38,9 @@ export default class App extends Component {
                     <Navbar color="faded" light toggleable>
                         <div className="container">
                             <NavbarToggler right onClick={this.navbarToggle}/>
-                            <NavbarBrand tag={Link} to='/'><i className="fa fa-lg fa-lightbulb-o" aria-hidden="true"></i> 智慧電表</NavbarBrand>
+                            <NavbarBrand tag={Link} to='/'>
+                                <i className="fa fa-lg fa-lightbulb-o" aria-hidden="true"></i>
+                                智慧電表</NavbarBrand>
                             <Collapse isOpen={this.state.isOpen} navbar>
                                 <Nav className="ml-auto" navbar>
                                     <NavItem>
@@ -54,9 +56,11 @@ export default class App extends Component {
                             </Collapse>
                         </div>
                     </Navbar>
-                    <Route exact path="/" component={Overview}/>
-                    <Route path="/report" component={Report}/>
-                    <Route path="/settings" component={Settings}/>
+                    <div className="container">
+                        <Route exact path="/" component={Overview}/>
+                        <Route path="/report" component={Report}/>
+                        <Route path="/settings" component={Settings}/>
+                    </div>
                 </div>
             </Router>
         );

@@ -68,8 +68,8 @@ class Report extends Component {
             <div>
                 <Row className="my-3">
                     <Col md={{
-                        size: 4,
-                        offset: 4
+                        size: 6,
+                        offset: 3
                     }}>
                         <Card>
                             <CardHeader tag="h3">年</CardHeader>
@@ -84,8 +84,8 @@ class Report extends Component {
                 </Row>
                 <Row className="mb-3">
                     <Col md={{
-                        size: 4,
-                        offset: 4
+                        size: 6,
+                        offset: 3
                     }}>
                         <Card>
                             <CardHeader tag="h3">月</CardHeader>
@@ -101,8 +101,8 @@ class Report extends Component {
                 </Row>
                 <Row className="mb-3">
                     <Col md={{
-                        size: 4,
-                        offset: 4
+                        size: 6,
+                        offset: 3
                     }}>
                         <Card>
                             <CardHeader tag="h3">日</CardHeader>

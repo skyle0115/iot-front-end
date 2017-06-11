@@ -90,14 +90,20 @@ class Settings extends Component {
 
     renderDevices() {
         return this.props.devices.map(e => {
-            const {id, name, deviceId, V} = e;
+            const {id, name, deviceId, V, color} = e;
             return (
                 <tr key={id}>
-                    <th scope="row">{id}</th>
-                    <td>{name}</td>
-                    <td>{deviceId}</td>
-                    <td>{V}</td>
-                    <td>
+                    <td className="align-middle">
+                        <div className=" mx-auto" style={{
+                            width: 10,
+                            height: 10,
+                            backgroundColor: color
+                        }}/>
+                    </td>
+                    <td className="align-middle">{name}</td>
+                    <td className="align-middle">{deviceId}</td>
+                    <td className="align-middle">{V}</td>
+                    <td className="align-middle">
                         <Button onClick={e => this.deviceOnClickUpdate(id, name, deviceId, V)} color="info">編輯</Button>{' '}
                         <Button onClick={e => this.props.deleteDevice(id)} color="danger">刪除</Button>
                     </td>
@@ -146,11 +152,11 @@ class Settings extends Component {
                 </Modal>
                 <Row className="my-3">
                     <Col md={{
-                        size: 4,
-                        offset: 4
+                        size: 6,
+                        offset: 3
                     }}>
                         <Row>
-                            <Col className="vcenter">
+                            <Col className="my-auto">
                                 <h3 style={{
                                     margin: 0
                                 }}>
@@ -164,8 +170,8 @@ class Settings extends Component {
                 </Row>
                 <Row className="mb-3">
                     <Col md={{
-                        size: 4,
-                        offset: 4
+                        size: 6,
+                        offset: 3
                     }}>
                         <Table striped>
                             <thead>
@@ -217,34 +223,34 @@ class Settings extends Component {
                 </Modal>
                 <Row className="mb-3">
                     <Col md={{
-                        size: 4,
-                        offset: 4
+                        size: 6,
+                        offset: 3
                     }}>
                         <h3>裝置管理</h3>
                     </Col>
                 </Row>
                 <Row className="mb-3">
                     <Col md={{
-                        size: 4,
-                        offset: 4
+                        size: 6,
+                        offset: 3
                     }}>
-                        <Form inline>
-                            <Input value={create_device_name} onChange={e => this.setState({create_device_name: e.target.value})} className="w-25 mr-1" type="text" placeholder="名稱"/>
-                            <Input value={create_device_deviceId} onChange={e => this.setState({create_device_deviceId: e.target.value})} className="w-25 mr-1" type="text" placeholder="ID"/>
-                            <Input value={create_device_V} onChange={e => this.setState({create_device_V: e.target.value})} className="w-25 mr-1" type="text" placeholder="伏特"/>
+                        <Form style={{display: 'flex', justifyContent: 'space-between'}} inline>
+                            <Input value={create_device_name} onChange={e => this.setState({create_device_name: e.target.value})} className="w-25" type="text" placeholder="名稱"/>
+                            <Input value={create_device_deviceId} onChange={e => this.setState({create_device_deviceId: e.target.value})} className="w-25" type="text" placeholder="ID"/>
+                            <Input value={create_device_V} onChange={e => this.setState({create_device_V: e.target.value})} className="w-25" type="text" placeholder="伏特"/>
                             <Button onClick={e => this.deviceOnCreate()} color="primary">新增</Button>
                         </Form>
                     </Col>
                 </Row>
                 <Row className="mb-3">
                     <Col md={{
-                        size: 4,
-                        offset: 4
+                        size: 6,
+                        offset: 3
                     }}>
                         <Table striped>
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th></th>
                                     <th>名稱</th>
                                     <th>ID</th>
                                     <th>伏特</th>
