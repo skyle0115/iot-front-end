@@ -31,11 +31,11 @@ class Settings extends Component {
             month_target,
             year_target,
             create_device_name: '',
-            create_device_deviceId: '',
+            create_device_dataChnId: '',
             create_device_V: '',
             edit_device_id: '',
             edit_device_name: '',
-            edit_device_deviceId: '',
+            edit_device_dataChnId: '',
             edit_device_V: ''
         };
 
@@ -72,25 +72,25 @@ class Settings extends Component {
     }
 
     deviceOnCreate() {
-        const {create_device_name, create_device_deviceId, create_device_V} = this.state;
-        this.props.createDevice(create_device_name, create_device_deviceId, create_device_V);
-        this.setState({create_device_name: '', create_device_deviceId: '', create_device_V: ''});
+        const {create_device_name, create_device_dataChnId, create_device_V} = this.state;
+        this.props.createDevice(create_device_name, create_device_dataChnId, create_device_V);
+        this.setState({create_device_name: '', create_device_dataChnId: '', create_device_V: ''});
     }
 
-    deviceOnClickUpdate(edit_device_id, edit_device_name, edit_device_deviceId, edit_device_V) {
-        this.setState({edit_device_id, edit_device_name, edit_device_deviceId, edit_device_V});
+    deviceOnClickUpdate(edit_device_id, edit_device_name, edit_device_dataChnId, edit_device_V) {
+        this.setState({edit_device_id, edit_device_name, edit_device_dataChnId, edit_device_V});
         this.deviceToggle();
     }
 
     deviceOnUpdate() {
-        const {edit_device_id, edit_device_name, edit_device_deviceId, edit_device_V} = this.state;
-        this.props.updateDevice(edit_device_id, edit_device_name, edit_device_deviceId, edit_device_V);
+        const {edit_device_id, edit_device_name, edit_device_dataChnId, edit_device_V} = this.state;
+        this.props.updateDevice(edit_device_id, edit_device_name, edit_device_dataChnId, edit_device_V);
         this.deviceToggle();
     }
 
     renderDevices() {
         return this.props.devices.map(e => {
-            const {id, name, deviceId, V, color} = e;
+            const {id, name, dataChnId, V, color} = e;
             return (
                 <tr key={id}>
                     <td className="align-middle">
@@ -101,10 +101,10 @@ class Settings extends Component {
                         }}/>
                     </td>
                     <td className="align-middle">{name}</td>
-                    <td className="align-middle">{deviceId}</td>
+                    <td className="align-middle">{dataChnId}</td>
                     <td className="align-middle">{V}</td>
                     <td className="align-middle">
-                        <Button onClick={e => this.deviceOnClickUpdate(id, name, deviceId, V)} color="info">編輯</Button>{' '}
+                        <Button onClick={e => this.deviceOnClickUpdate(id, name, dataChnId, V)} color="info">編輯</Button>{' '}
                         <Button onClick={e => this.props.deleteDevice(id)} color="danger">刪除</Button>
                     </td>
                 </tr>
@@ -119,10 +119,10 @@ class Settings extends Component {
             month_target,
             year_target,
             edit_device_name,
-            edit_device_deviceId,
+            edit_device_dataChnId,
             edit_device_V,
             create_device_name,
-            create_device_deviceId,
+            create_device_dataChnId,
             create_device_V
         } = this.state;
         return (
@@ -207,8 +207,8 @@ class Settings extends Component {
                                 <Input value={edit_device_name} onChange={e => this.setState({edit_device_name: e.target.value})} type="text"/>
                             </FormGroup>
                             <FormGroup>
-                                <Label>ID</Label>
-                                <Input value={edit_device_deviceId} onChange={e => this.setState({edit_device_deviceId: e.target.value})} type="text"/>
+                                <Label>資料通道 ID</Label>
+                                <Input value={edit_device_dataChnId} onChange={e => this.setState({edit_device_dataChnId: e.target.value})} type="text"/>
                             </FormGroup>
                             <FormGroup>
                                 <Label>伏特</Label>
@@ -236,7 +236,7 @@ class Settings extends Component {
                     }}>
                         <Form style={{display: 'flex', justifyContent: 'space-between'}} inline>
                             <Input value={create_device_name} onChange={e => this.setState({create_device_name: e.target.value})} className="w-25" type="text" placeholder="名稱"/>
-                            <Input value={create_device_deviceId} onChange={e => this.setState({create_device_deviceId: e.target.value})} className="w-25" type="text" placeholder="ID"/>
+                            <Input value={create_device_dataChnId} onChange={e => this.setState({create_device_dataChnId: e.target.value})} className="w-25" type="text" placeholder="資料通道 ID"/>
                             <Input value={create_device_V} onChange={e => this.setState({create_device_V: e.target.value})} className="w-25" type="text" placeholder="伏特"/>
                             <Button onClick={e => this.deviceOnCreate()} color="primary">新增</Button>
                         </Form>
@@ -252,7 +252,7 @@ class Settings extends Component {
                                 <tr>
                                     <th></th>
                                     <th>名稱</th>
-                                    <th>ID</th>
+                                    <th>資料通道 ID</th>
                                     <th>伏特</th>
                                     <th>動作</th>
                                 </tr>

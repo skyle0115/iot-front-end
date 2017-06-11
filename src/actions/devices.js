@@ -1,21 +1,21 @@
-export function createDevice(name, deviceId, V) {
+export function createDevice(name, dataChnId, V) {
     return {
         type: '@DEVICES/CREATE',
         payload: {
             name,
-            deviceId,
+            dataChnId,
             V
         }
     };
 }
 
-export function updateDevice(id, name, deviceId, V) {
+export function updateDevice(id, name, dataChnId, V) {
     return {
         type: '@DEVICES/UPDATE',
         payload: {
             id,
             name,
-            deviceId,
+            dataChnId,
             V
         }
     };

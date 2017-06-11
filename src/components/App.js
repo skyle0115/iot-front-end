@@ -36,6 +36,7 @@ export default class App extends Component {
         return (
             <Router>
                 <div>
+                    <LoadingBar style={{display: 'absolute', position: 'fixed', zIndex: 100}}/>
                     <Navbar color="faded" light toggleable>
                         <div className="container">
                             <NavbarToggler right onClick={this.navbarToggle}/>
@@ -59,7 +60,6 @@ export default class App extends Component {
                             </Collapse>
                         </div>
                     </Navbar>
-                    <LoadingBar/>
                     <div className="container">
                         <Route exact path="/" component={Overview}/>
                         <Route exact path="/report" component={Report}/>

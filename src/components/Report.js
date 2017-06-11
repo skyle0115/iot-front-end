@@ -2,13 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import moment from 'moment';
-import {
-    Col,
-    Row,
-    Card,
-    Button,
-    CardHeader
-} from 'reactstrap';
+import {Col, Row, Card, Button, CardHeader} from 'reactstrap';
 
 import ComboBox from './ComboBox';
 import {getReport} from '../actions/current';
@@ -17,8 +11,20 @@ import ReportItem from './ReportItem';
 var YEAR = [
         2016, 2017
     ],
-    MONTH = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-    DAY = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+    MONTH = [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+    ];
 
 class Report extends Component {
 
@@ -28,15 +34,9 @@ class Report extends Component {
             month = moment().month() + 1,
             date = moment().date();
         this.state = {
-            yearStartYear: year,
-            yearEndYear: year,
             monthStartYear: year,
-            monthStartMonth: month,
-            monthEndMonth: month,
             dayStartYear: year,
-            dayStartMonth: month,
-            dayStartDate: date,
-            dayEndDate: date
+            dayStartMonth: month
         }
     }
 
@@ -47,19 +47,17 @@ class Report extends Component {
     }
 
     fetchYear() {
-        const {yearStartYear, yearEndYear} = this.state;
-        this.props.getReport('YYYY', `${yearStartYear}/1/1 00:00:00`, `${yearEndYear}/12/31 23:59:59`);
+        this.props.getReport('YYYY', `2016/1/1 00:00:00`, `2017/12/31 23:59:59`);
     }
 
     fetchMonth() {
-        const {monthStartYear, monthStartMonth, monthEndMonth} = this.state;
-        let daysInMonth = moment(`${monthStartYear}/${monthEndMonth}`, "YYYY/MM").daysInMonth();
-        this.props.getReport('MM', `${monthStartYear}/${monthStartMonth}/1 00:00:00`, `${monthStartYear}/${monthEndMonth}/${daysInMonth} 23:59:59`);
+        const {monthStartYear} = this.state;
+        this.props.getReport('MM', `${monthStartYear}/1/1 00:00:00`, `${monthStartYear}/12/31 23:59:59`);
     }
 
     fetchDay() {
-        const {dayStartYear, dayStartMonth, dayStartDate, dayEndDate} = this.state;
-        this.props.getReport('DD', `${dayStartYear}/${dayStartMonth}/${dayStartDate} 00:00:00`, `${dayStartYear}/${dayStartMonth}/${dayEndDate} 23:59:59`);
+        const {dayStartYear, dayStartMonth} = this.state;
+        this.props.getReport('DD', `${dayStartYear}/${dayStartMonth}/1 00:00:00`, `${dayStartYear}/${dayStartMonth}/31 23:59:59`);
     }
 
     render() {
@@ -72,13 +70,24 @@ class Report extends Component {
                         offset: 3
                     }}>
                         <Card>
-                            <CardHeader tag="h3">年</CardHeader>
                             <CardHeader>
-                                <ComboBox default={this.state.yearStartYear} items={YEAR} onChange={value => this.setState({yearStartYear: value})}/> {' ~ '}
-                                <ComboBox default={this.state.yearEndYear} items={YEAR} onChange={value => this.setState({yearEndYear: value})}/> {' '}
-                                <Button color='primary' onClick={e => this.fetchYear()}>送出</Button>
+                                <Row>
+                                    <Col className="my-auto">
+                                        <h3 style={{
+                                            margin: 0
+                                        }}>
+                                            日</h3>
+                                    </Col>
+                                    <Col className="text-right">
+                                        <ComboBox default={this.state.dayStartYear} items={YEAR} onChange={value => this.setState({dayStartYear: value})}/> {' '}
+                                        <ComboBox default={this.state.dayStartMonth} items={MONTH} onChange={value => this.setState({dayStartMonth: value})}/> {' '}
+                                        <Button color='primary' onClick={e => this.fetchDay()}>
+                                            <i className="fa fa-arrow-right" aria-hidden="true"></i>
+                                        </Button>
+                                    </Col>
+                                </Row>
                             </CardHeader>
-                            <ReportItem xunit="年" data={year}/>
+                            <ReportItem startIndex={Math.max(moment().date() - 6, 1) - 1} endIndex={moment().date() - 1} xunit="日" data={day}/>
                         </Card>
                     </Col>
                 </Row>
@@ -88,14 +97,23 @@ class Report extends Component {
                         offset: 3
                     }}>
                         <Card>
-                            <CardHeader tag="h3">月</CardHeader>
                             <CardHeader>
-                                <ComboBox default={this.state.monthStartYear} items={YEAR} onChange={value => this.setState({monthStartYear: value})}/> {' '}
-                                <ComboBox default={this.state.monthStartMonth} items={MONTH} onChange={value => this.setState({monthStartMonth: value})}/> {' ~ '}
-                                <ComboBox default={this.state.monthEndMonth} items={MONTH} onChange={value => this.setState({monthEndMonth: value})}/> {' '}
-                                <Button color='primary' onClick={e => this.fetchMonth()}>送出</Button>
+                                <Row>
+                                    <Col className="my-auto">
+                                        <h3 style={{
+                                            margin: 0
+                                        }}>
+                                            月</h3>
+                                    </Col>
+                                    <Col className="text-right">
+                                        <ComboBox default={this.state.monthStartYear} items={YEAR} onChange={value => this.setState({monthStartYear: value})}/> {' '}
+                                        <Button color='primary' onClick={e => this.fetchMonth()}>
+                                            <i className="fa fa-arrow-right" aria-hidden="true"></i>
+                                        </Button>
+                                    </Col>
+                                </Row>
                             </CardHeader>
-                            <ReportItem xunit="月" data={month}/>
+                            <ReportItem startIndex={Math.max(moment().month() + 1 - 6, 1) - 1} endIndex={moment().month() + 1 - 1} xunit="月" data={month}/>
                         </Card>
                     </Col>
                 </Row>
@@ -105,15 +123,22 @@ class Report extends Component {
                         offset: 3
                     }}>
                         <Card>
-                            <CardHeader tag="h3">日</CardHeader>
                             <CardHeader>
-                                <ComboBox default={this.state.dayStartYear} items={YEAR} onChange={value => this.setState({dayStartYear: value})}/> {' '}
-                                <ComboBox default={this.state.dayStartMonth} items={MONTH} onChange={value => this.setState({dayStartMonth: value})}/> {' '}
-                                <ComboBox default={this.state.dayStartDate} items={DAY} onChange={value => this.setState({dayStartDate: value})}/> {' ~ '}
-                                <ComboBox default={this.state.dayEndDate} items={DAY} onChange={value => this.setState({dayEndDate: value})}/> {' '}
-                                <Button color='primary' onClick={e => this.fetchDay()}>送出</Button>
+                                <Row>
+                                    <Col className="my-auto">
+                                        <h3 style={{
+                                            margin: 0
+                                        }}>
+                                            年</h3>
+                                    </Col>
+                                    <Col className="text-right">
+                                        <Button color='primary' onClick={e => this.fetchYear()}>
+                                            <i className="fa fa-refresh" aria-hidden="true"></i>
+                                        </Button>
+                                    </Col>
+                                </Row>
                             </CardHeader>
-                            <ReportItem xunit="日" data={day}/>
+                            <ReportItem startIndex={0} endIndex={0} xunit="年" data={year}/>
                         </Card>
                     </Col>
                 </Row>

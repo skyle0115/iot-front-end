@@ -9,7 +9,8 @@ import {
     Card,
     CardBlock,
     CardHeader,
-    CardFooter
+    CardFooter,
+    Button
 } from 'reactstrap';
 import moment from 'moment';
 
@@ -52,7 +53,7 @@ class Overview extends Component {
         let overviewStart = `${start_day} 00:00:00`,
             overviewEnd = moment().format('YYYY/MM/DD HH:mm:ss');
         this.setState({overviewType: type, overviewStart, overviewEnd});
-        this.props.getOverview(overviewStart, overviewEnd);
+        this.props.getOverview(type, overviewStart, overviewEnd);
     }
 
     renderLegend(data) {
@@ -96,16 +97,44 @@ class Overview extends Component {
             : overviewType === '月'
                 ? month_target
                 : year_target;
-        const rest = Math.round((target - _.sumBy(overview, ele => ele.kWh)) * 10) / 10;
+        const total = _.sumBy(overview, ele => ele.kWh);
+        const rest = Math.round((target - total) * 10) / 10;
         const data = [
             {
                 id: -1,
-                name: '剩餘',
-                kWh: rest,
-                color: '#ededed'
+                name: rest > 0
+                    ? '剩餘'
+                    : '超過',
+                kWh: rest > 0
+                    ? rest
+                    : -rest,
+                color: rest > 0
+                    ? '#ededed'
+                    : '#000000'
             },
             ...overview
         ];
+        const alert = {
+            distance: '',
+            time: '',
+            unit: ''
+        };
+        switch (overviewType) {
+            case '日':
+                alert.distance = '今天';
+                alert.time = moment().endOf('day').hour() - moment().hour();
+                alert.unit = '個小時';
+                break;
+            case '月':
+                alert.distance = '這個月';
+                alert.time = moment().endOf('month').date() - moment().date();
+                alert.unit = '天';
+                break;
+            default:
+                alert.distance = '今年';
+                alert.time = moment().endOf('year').month() - moment().month();
+                alert.unit = '個月';
+        }
         return (
             <div>
                 <Row className="my-3">
@@ -122,10 +151,14 @@ class Overview extends Component {
                                         }}>總覽</h3>
                                     </Col>
                                     <Col className="text-right">
-                                        <ComboBox items={['日', '月', '年']} onChange={value => this.overviewOnChange(value)}/>
+                                        <ComboBox default={this.state.overviewType} items={['日', '月', '年']} onChange={value => this.overviewOnChange(value)}/>{' '}
+                                        <Button onClick={e => this.overviewOnChange(this.state.overviewType)} color="primary">
+                                            <i className="fa fa-refresh" aria-hidden="true"></i>
+                                        </Button>
                                     </Col>
                                 </Row>
                             </CardHeader>
+                            <CardHeader>{`已使用 ${total} 度，剩餘 ${rest} 度。距${alert.distance}結束還有 ${alert.time} ${alert.unit}。`}</CardHeader>
                             <CardBlock>
                                 <div style={{
                                     display: 'flex',
@@ -134,7 +167,7 @@ class Overview extends Component {
                                 }}>
                                     <PieChart width={200} height={200}>
                                         <text x={100} y={100} textAnchor="middle" dominantBaseline="middle">
-                                            {`剩餘 ${rest} 度`}
+                                            {`${data[0].name} ${data[0].kWh} 度`}
                                         </text>
                                         <Pie data={data} nameKey="name" dataKey="kWh" innerRadius={60} outerRadius={80} fill="#82ca9d">
                                             {data.map(e => <Cell key={e.id} fill={e.color}/>)}

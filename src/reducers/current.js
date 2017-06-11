@@ -7,7 +7,7 @@ export function overview(state = [], action) {
     }
 }
 
-export function report(state = {
+const defaultState = {
     year: {
         data: [],
         name: []
@@ -20,7 +20,9 @@ export function report(state = {
         data: [],
         name: []
     }
-}, action) {
+};
+
+export function report(state = defaultState, action) {
     switch (action.type) {
         case '@REPORT/GET_DD':
             return {

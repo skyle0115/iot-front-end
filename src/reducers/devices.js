@@ -4,21 +4,23 @@ const defaultState = [
     {
         id: 0,
         name: '冰箱',
-        deviceId: 'DabcDE78',
+        dataChnId: 'line0_GIoT',
         color: randomColor(),
         V: 110
-    }, {
+    },
+    {
         id: 1,
-        name: '電視',
-        deviceId: 'DbzrXH0P',
+        name: '烤箱',
+        dataChnId: 'line1_GIoT',
         color: randomColor(),
         V: 110
-    }, {
+    },
+    {
         id: 2,
-        name: '烤箱',
-        deviceId: 'DXLQwmnN',
+        name: '洗衣機',
+        dataChnId: 'line2_GIoT',
         color: randomColor(),
-        V: 220
+        V: 110
     }
 ];
 
@@ -27,18 +29,18 @@ export default function(state = defaultState, action) {
         case '@DEVICES/CREATE':
             return [
                 ...state, {
-                    id: state.length,
+                    id: state[state.length - 1].id + 1,
                     color: randomColor(),
                     ...action.payload
                 }
             ];
         case '@DEVICES/UPDATE':
             let next = [...state];
-            const {id, name, deviceId, V} = action.payload;
+            const {id, name, dataChnId, V} = action.payload;
             for (let d of next) {
                 if (d.id === id) {
                     d.name = name;
-                    d.deviceId = deviceId;
+                    d.dataChnId = dataChnId;
                     d.V = parseInt(V, 10);
                 }
             }

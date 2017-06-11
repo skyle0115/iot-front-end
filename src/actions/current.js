@@ -3,7 +3,7 @@ import moment from 'moment';
 import {showLoading, hideLoading} from 'react-redux-loading-bar';
 import {getCurrent} from '../api/current'
 
-export function getOverview(start, end) {
+export function getOverview(type, start, end) {
     return ((dispatch, getState) => {
         dispatch(showLoading());
         start = new Date(start).getTime();
@@ -14,32 +14,37 @@ export function getOverview(start, end) {
         let payload = [];
 
         for (let device of devices) {
-            getCurrent(device.deviceId, start, end).then(res => {
-                const {deviceId, name, color, id} = device;
+            getCurrent(device.dataChnId, start, end).then(res => {
+                const {id, name, dataChnId, color} = device;
+                const {dataPoints} = res.data.dataChannels[0];
                 let p = {
                     id,
                     name,
-                    deviceId,
+                    dataChnId,
                     color,
-                    t_a: [],
-                    kWh: 0
+                    kWh: 0,
+                    t_a: []
+                };
+                const DATA_POINTS = 300;
+                const len = dataPoints.length;
+                const interval = len <= DATA_POINTS
+                    ? 1
+                    : Math.round(len / DATA_POINTS);
+                for (let i = 0; i < len - 1; i += interval) {
+                    p.t_a.push({timestamp: dataPoints[i].recordedAt, value: dataPoints[i].values.value});
                 }
-                p.t_a = res.data.dataChannels.map(data => {
-                    return {timestamp: data.timestamp, value: data.values.value};
-                });
-                for (let i = 0, len = p.t_a.length; i < len - 1; i++) {
-                    p.kWh += (p.t_a[i + 1].timestamp - p.t_a[i].timestamp) * p.t_a[i].value;
+                for (let i = 0; i < len - 1; i++) {
+                    p.kWh += (dataPoints[i + 1].recordedAt - dataPoints[i].recordedAt) * dataPoints[i].values.value;
                 }
                 p.kWh = Math.round(p.kWh / 1000 * device.V / 3600 / 1000 / 100) / 10;
                 payload.push(p);
-
                 fecthed_num++;
                 if (fecthed_num === devices_num) {
-                    dispatch(hideLoading());
                     dispatch({
                         type: '@OVERVIEW/GET',
                         payload: _.sortBy(payload, ele => -ele.kWh)
                     });
+                    dispatch(hideLoading());
                 }
             });
         }
@@ -60,20 +65,20 @@ export function getReport(type, start, end) {
             name: {},
             data: []
         };
-
         for (let device of devices) {
-            getCurrent(device.deviceId, start, end).then(res => {
-                payload.name[device.deviceId] = {
+            getCurrent(device.dataChnId, start, end).then(res => {
+                const {dataPoints} = res.data.dataChannels[0];
+                payload.name[device.dataChnId] = {
                     name: device.name,
                     color: device.color
                 };
                 let current = null;
                 let sum;
 
-                res.data.dataChannels.push({timestamp: null});
-                for (let i = 0, len = res.data.dataChannels.length; i < len; i++) {
-                    const data = res.data.dataChannels[i];
-                    const timestamp = data.timestamp;
+                dataPoints.push({recordedAt: null});
+                for (let i = 0, len = dataPoints.length; i < len; i++) {
+                    const data = dataPoints[i];
+                    const timestamp = data.recordedAt;
                     const next = moment(timestamp).format(index_string);
                     if (current !== next) {
                         if (current !== null) {
@@ -81,18 +86,17 @@ export function getReport(type, start, end) {
                             if (!payload.data[index])
                                 payload.data[index] = {};
                             payload.data[index].time = index + index_offset;
-                            payload.data[index][device.deviceId] = Math.round(sum / 1000 * device.V / 3600 / 1000 / 100) / 10;
+                            payload.data[index][device.dataChnId] = Math.round(sum / 1000 * device.V / 3600 / 1000 / 100) / 10;
                         }
                         current = next;
                         sum = 0;
                     } else {
-                        const data0 = res.data.dataChannels[i - 1];
-                        const timestamp0 = data0.timestamp,
+                        const data0 = dataPoints[i - 1];
+                        const timestamp0 = data0.recordedAt,
                             value0 = data0.values.value;
                         sum += (timestamp - timestamp0) * value0;
                     }
                 }
-
                 fecthed_num++;
                 if (fecthed_num === devices_num) {
                     dispatch(hideLoading());
