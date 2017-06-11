@@ -31,8 +31,7 @@ class Report extends Component {
     constructor(props) {
         super(props);
         let year = moment().year(),
-            month = moment().month() + 1,
-            date = moment().date();
+            month = moment().month() + 1;
         this.state = {
             monthStartYear: year,
             dayStartYear: year,

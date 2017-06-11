@@ -23,13 +23,12 @@ class Settings extends Component {
     constructor(props) {
         super(props);
 
-        const {day_target, month_target, year_target} = this.props.target;
+        const {summerTarget, notSummerTarget} = this.props.target;
         this.state = {
             targetModal: false,
             deviceModal: false,
-            day_target,
-            month_target,
-            year_target,
+            summerTarget,
+            notSummerTarget,
             create_device_name: '',
             create_device_dataChnId: '',
             create_device_V: '',
@@ -60,8 +59,8 @@ class Settings extends Component {
     }
 
     targetOnUpdate() {
-        const {day_target, month_target, year_target} = this.state;
-        this.props.updateTarget(day_target, month_target, year_target);
+        const {summerTarget, notSummerTarget} = this.state;
+        this.props.updateTarget(summerTarget, notSummerTarget);
         this.targetToggle();
     }
 
@@ -115,9 +114,8 @@ class Settings extends Component {
 
     render() {
         const {
-            day_target,
-            month_target,
-            year_target,
+            summerTarget,
+            notSummerTarget,
             edit_device_name,
             edit_device_dataChnId,
             edit_device_V,
@@ -132,16 +130,12 @@ class Settings extends Component {
                     <ModalBody>
                         <Form>
                             <FormGroup>
-                                <Label>日目標</Label>
-                                <Input value={day_target} onChange={e => this.setState({day_target: e.target.value})} type="text"/>
+                                <Label>夏季月（度）</Label>
+                                <Input value={summerTarget} onChange={e => this.setState({summerTarget: e.target.value})} type="text"/>
                             </FormGroup>
                             <FormGroup>
-                                <Label>月目標</Label>
-                                <Input value={month_target} onChange={e => this.setState({month_target: e.target.value})} type="text"/>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label>年目標</Label>
-                                <Input value={year_target} onChange={e => this.setState({year_target: e.target.value})} type="text"/>
+                                <Label>非夏季月（度）</Label>
+                                <Input value={notSummerTarget} onChange={e => this.setState({notSummerTarget: e.target.value})} type="text"/>
                             </FormGroup>
                         </Form>
                     </ModalBody>
@@ -176,22 +170,18 @@ class Settings extends Component {
                         <Table striped>
                             <thead>
                                 <tr>
-                                    <th></th>
-                                    <th>度數</th>
+                                    <th>月份</th>
+                                    <th>目標用電量（度）</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <th scope="row">日目標</th>
-                                    <td>{this.props.target.day_target}</td>
+                                    <th scope="row">夏季月(6 ~ 9)</th>
+                                    <td>{this.props.target.summerTarget}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">月目標</th>
-                                    <td>{this.props.target.month_target}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">年目標</th>
-                                    <td>{this.props.target.year_target}</td>
+                                    <th scope="row">非夏季月</th>
+                                    <td>{this.props.target.notSummerTarget}</td>
                                 </tr>
                             </tbody>
                         </Table>
@@ -234,7 +224,10 @@ class Settings extends Component {
                         size: 6,
                         offset: 3
                     }}>
-                        <Form style={{display: 'flex', justifyContent: 'space-between'}} inline>
+                        <Form style={{
+                            display: 'flex',
+                            justifyContent: 'space-between'
+                        }} inline>
                             <Input value={create_device_name} onChange={e => this.setState({create_device_name: e.target.value})} className="w-25" type="text" placeholder="名稱"/>
                             <Input value={create_device_dataChnId} onChange={e => this.setState({create_device_dataChnId: e.target.value})} className="w-25" type="text" placeholder="資料通道 ID"/>
                             <Input value={create_device_V} onChange={e => this.setState({create_device_V: e.target.value})} className="w-25" type="text" placeholder="伏特"/>

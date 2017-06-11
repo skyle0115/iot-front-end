@@ -1,10 +1,9 @@
-export function updateTarget(day_target, month_target, year_target) {
+export function updateTarget(summerTarget, notSummerTarget) {
     return {
         type: '@TARGET/UPDATE',
         payload: {
-            day_target,
-            month_target,
-            year_target
+            summerTarget,
+            notSummerTarget
         }
     };
 }

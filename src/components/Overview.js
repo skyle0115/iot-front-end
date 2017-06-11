@@ -2,15 +2,17 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
-import {PieChart, Pie, Tooltip, Cell} from 'recharts';
+import {PieChart, Pie, Tooltip, Cell, Legend} from 'recharts';
 import {
     Col,
     Row,
     Card,
     CardBlock,
     CardHeader,
+    CardText,
     CardFooter,
-    Button
+    Button,
+    Progress
 } from 'reactstrap';
 import moment from 'moment';
 
@@ -56,31 +58,6 @@ class Overview extends Component {
         this.props.getOverview(type, overviewStart, overviewEnd);
     }
 
-    renderLegend(data) {
-        return (
-            <ul style={{
-                listStyleType: 'none',
-                padding: 0,
-                display: 'inline-block'
-            }}>
-                {data.map(e => {
-                    const {id, name, color} = e;
-                    return (
-                        <li key={id}>
-                            <div className="mr-2" style={{
-                                display: 'inline-block',
-                                width: 10,
-                                height: 10,
-                                backgroundColor: color
-                            }}/>
-                            <span>{name}</span>
-                        </li>
-                    );
-                })}
-            </ul>
-        );
-    }
-
     renderOverview(overview) {
         return overview.map((ele, idx) => {
             const {t_a, name, color, kWh} = ele;
@@ -88,15 +65,25 @@ class Overview extends Component {
         });
     }
 
+    calculateBill(month, kWh) {
+        const unit = ((month + 1) >= 6 || (month + 1) <= 9)
+            ? 6
+            : 3;
+        return unit * kWh;
+    }
+
     render() {
         const {overviewType, overviewStart, overviewEnd} = this.state;
         const {overview} = this.props;
-        const {day_target, month_target, year_target} = this.props.target;
+        const {summerTarget, notSummerTarget} = this.props.target;
+        const monthTarget = ((moment().month() + 1) >= 6 || (moment().month() + 1) <= 9)
+            ? summerTarget
+            : notSummerTarget;
         const target = overviewType === '日'
-            ? day_target
+            ? Math.round(monthTarget / moment().daysInMonth())
             : overviewType === '月'
-                ? month_target
-                : year_target;
+                ? monthTarget
+                : summerTarget * 4 + notSummerTarget * 8;
         const total = _.sumBy(overview, ele => ele.kWh);
         const rest = Math.round((target - total) * 10) / 10;
         const data = [
@@ -117,23 +104,29 @@ class Overview extends Component {
         const alert = {
             distance: '',
             time: '',
-            unit: ''
+            unit: '',
+            currentFee: '',
+            totalFee: ''
         };
+        alert.currentFee = Math.round(this.calculateBill(moment().month(), total));
         switch (overviewType) {
             case '日':
                 alert.distance = '今天';
                 alert.time = moment().endOf('day').hour() - moment().hour();
                 alert.unit = '個小時';
+                alert.totalFee = Math.round(alert.currentFee * moment().endOf('day').hour() / moment().hour());
                 break;
             case '月':
-                alert.distance = '這個月';
+                alert.distance = '本月';
                 alert.time = moment().endOf('month').date() - moment().date();
                 alert.unit = '天';
+                alert.totalFee = Math.round(alert.currentFee * moment().endOf('month').date() / moment().date());
                 break;
             default:
                 alert.distance = '今年';
                 alert.time = moment().endOf('year').month() - moment().month();
                 alert.unit = '個月';
+                alert.totalFee = Math.round(alert.currentFee * moment().endOf('year').month() / moment().month());
         }
         return (
             <div>
@@ -158,24 +151,25 @@ class Overview extends Component {
                                     </Col>
                                 </Row>
                             </CardHeader>
-                            <CardHeader>{`已使用 ${total} 度，剩餘 ${rest} 度。距${alert.distance}結束還有 ${alert.time} ${alert.unit}。`}</CardHeader>
+                            <CardHeader>{`${alert.distance}上限 ${target} 度，剩餘 ${rest} 度，距${alert.distance}結束還有 ${alert.time} ${alert.unit}。`}</CardHeader>
                             <CardBlock>
-                                <div style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
+                                <div className="mx-auto mb-3" style={{
+                                    width: 300
                                 }}>
-                                    <PieChart width={200} height={200}>
-                                        <text x={100} y={100} textAnchor="middle" dominantBaseline="middle">
-                                            {`${data[0].name} ${data[0].kWh} 度`}
-                                        </text>
-                                        <Pie data={data} nameKey="name" dataKey="kWh" innerRadius={60} outerRadius={80} fill="#82ca9d">
+                                    <PieChart width={300} height={200}>
+                                        <Pie data={data} nameKey="name" dataKey="kWh" innerRadius={0} outerRadius={80} fill="#82ca9d">
                                             {data.map(e => <Cell key={e.id} fill={e.color}/>)}
                                         </Pie>
+                                        <Legend align="right" verticalAlign="middle" layout="vertical"/>
                                         <Tooltip/>
                                     </PieChart>
-                                    {this.renderLegend(data)}
                                 </div>
+                                <CardText className="text-center">
+                                    <Progress multi>
+                                        <Progress bar color="success" value={Math.round(alert.currentFee * 100 / alert.totalFee)}>{`$${alert.currentFee}`}</Progress>
+                                    </Progress>
+                                    {`${alert.distance}電費：目前 ${alert.currentFee} 元，預估共 ${alert.totalFee} 元。`}
+                                </CardText>
                             </CardBlock>
                             <CardFooter className="text-muted text-center">
                                 {`${overviewStart} ~ ${overviewEnd}`}
