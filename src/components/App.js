@@ -9,6 +9,7 @@ import {
     NavItem,
     NavLink
 } from 'reactstrap';
+import LoadingBar from 'react-redux-loading-bar';
 import Report from './Report';
 import Overview from './Overview';
 import Settings from './Settings';
@@ -39,8 +40,10 @@ export default class App extends Component {
                         <div className="container">
                             <NavbarToggler right onClick={this.navbarToggle}/>
                             <NavbarBrand tag={Link} to='/'>
-                                <i className="fa fa-lg fa-lightbulb-o" aria-hidden="true"></i>
-                                智慧電表</NavbarBrand>
+                                <i className="fa fa-lg fa-lightbulb-o" aria-hidden="true">
+                                    {` 智慧電表`}
+                                </i>
+                            </NavbarBrand>
                             <Collapse isOpen={this.state.isOpen} navbar>
                                 <Nav className="ml-auto" navbar>
                                     <NavItem>
@@ -56,10 +59,22 @@ export default class App extends Component {
                             </Collapse>
                         </div>
                     </Navbar>
+                    <LoadingBar/>
                     <div className="container">
                         <Route exact path="/" component={Overview}/>
-                        <Route path="/report" component={Report}/>
-                        <Route path="/settings" component={Settings}/>
+                        <Route exact path="/report" component={Report}/>
+                        <Route exact path="/settings" component={Settings}/>
+                        <div>
+                            <hr className="mb-2"/>
+                            <p className="text-center">
+                                {`© 10520 物聯網概論第 13 組 | `}
+                                <Link target="_blank" to="https://github.com/skyle0115/iot-front-end">
+                                    <i className="fa fa-github" aria-hidden="true">
+                                        {` Github`}
+                                    </i>
+                                </Link>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </Router>

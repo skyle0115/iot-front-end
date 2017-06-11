@@ -94,7 +94,7 @@ class Settings extends Component {
             return (
                 <tr key={id}>
                     <td className="align-middle">
-                        <div className=" mx-auto" style={{
+                        <div className="mx-auto" style={{
                             width: 10,
                             height: 10,
                             backgroundColor: color

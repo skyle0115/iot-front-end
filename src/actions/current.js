@@ -1,9 +1,11 @@
-import {getCurrent} from '../api/current'
 import _ from 'lodash';
 import moment from 'moment';
+import {showLoading, hideLoading} from 'react-redux-loading-bar';
+import {getCurrent} from '../api/current'
 
 export function getOverview(start, end) {
     return ((dispatch, getState) => {
+        dispatch(showLoading());
         start = new Date(start).getTime();
         end = new Date(end).getTime();
         let {devices} = getState();
@@ -33,6 +35,7 @@ export function getOverview(start, end) {
 
                 fecthed_num++;
                 if (fecthed_num === devices_num) {
+                    dispatch(hideLoading());
                     dispatch({
                         type: '@OVERVIEW/GET',
                         payload: _.sortBy(payload, ele => -ele.kWh)
@@ -45,6 +48,7 @@ export function getOverview(start, end) {
 
 export function getReport(type, start, end) {
     return ((dispatch, getState) => {
+        dispatch(showLoading());
         start = new Date(start).getTime();
         end = new Date(end).getTime();
         let {devices} = getState();
@@ -59,7 +63,10 @@ export function getReport(type, start, end) {
 
         for (let device of devices) {
             getCurrent(device.deviceId, start, end).then(res => {
-                payload.name[device.deviceId] = {name: device.name, color: device.color};
+                payload.name[device.deviceId] = {
+                    name: device.name,
+                    color: device.color
+                };
                 let current = null;
                 let sum;
 
@@ -88,6 +95,7 @@ export function getReport(type, start, end) {
 
                 fecthed_num++;
                 if (fecthed_num === devices_num) {
+                    dispatch(hideLoading());
                     dispatch({type: `@REPORT/GET_${type}`, payload});
                 }
             });

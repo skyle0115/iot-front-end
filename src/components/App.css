@@ -1,5 +1,5 @@
 @media (max-width: 575px) {
-    .navbar-toggleable > .container {
+    .navbar-toggleable>.container {
         width: 100%;
     }
 }

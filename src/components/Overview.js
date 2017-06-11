@@ -9,10 +9,8 @@ import {
     Card,
     CardBlock,
     CardHeader,
-    CardFooter,
-    Table
+    CardFooter
 } from 'reactstrap';
-import randomColor from 'randomcolor';
 import moment from 'moment';
 
 import {getOverview} from '../actions/current';
