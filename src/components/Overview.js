@@ -66,9 +66,10 @@ class Overview extends Component {
     }
 
     calculateBill(month, kWh) {
+        const {summerFee, notSummerFee} = this.props.target;
         const unit = ((month + 1) >= 6 || (month + 1) <= 9)
-            ? 6
-            : 3;
+            ? summerFee
+            : notSummerFee;
         return unit * kWh;
     }
 

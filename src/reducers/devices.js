@@ -15,13 +15,13 @@ const defaultState = [
         color: randomColor(),
         V: 110
     },
-    {
-        id: 2,
-        name: '洗衣機',
-        dataChnId: 'line2_GIoT',
-        color: randomColor(),
-        V: 110
-    }
+    // {
+    //     id: 2,
+    //     name: '洗衣機',
+    //     dataChnId: 'line2_GIoT',
+    //     color: randomColor(),
+    //     V: 110
+    // }
 ];
 
 export default function(state = defaultState, action) {

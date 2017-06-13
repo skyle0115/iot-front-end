@@ -56,7 +56,8 @@ class Report extends Component {
 
     fetchDay() {
         const {dayStartYear, dayStartMonth} = this.state;
-        this.props.getReport('DD', `${dayStartYear}/${dayStartMonth}/1 00:00:00`, `${dayStartYear}/${dayStartMonth}/31 23:59:59`);
+        const daysInMonth = moment(`${dayStartYear}/${dayStartMonth}`, 'YYYY/MM').daysInMonth();
+        this.props.getReport('DD', `${dayStartYear}/${dayStartMonth}/1 00:00:00`, `${dayStartYear}/${dayStartMonth}/${daysInMonth} 23:59:59`);
     }
 
     render() {

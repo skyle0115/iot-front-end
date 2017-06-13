@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
 import {AreaChart, Area, ResponsiveContainer} from 'recharts';
 
-import {Col, Row, Card, CardBlock, CardTitle} from 'reactstrap';
+import {Col, Row, Card, CardBlock} from 'reactstrap';
 
 export default class OverviewItem extends Component {
     render() {
         const {inverse, color, data, title, value} = this.props;
-
         return (
             <Row className="mb-3">
                 <Col md={{

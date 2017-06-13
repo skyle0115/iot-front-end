@@ -23,12 +23,14 @@ class Settings extends Component {
     constructor(props) {
         super(props);
 
-        const {summerTarget, notSummerTarget} = this.props.target;
+        const {summerTarget, notSummerTarget, summerFee, notSummerFee} = this.props.target;
         this.state = {
             targetModal: false,
             deviceModal: false,
             summerTarget,
             notSummerTarget,
+            summerFee,
+            notSummerFee,
             create_device_name: '',
             create_device_dataChnId: '',
             create_device_V: '',
@@ -59,8 +61,8 @@ class Settings extends Component {
     }
 
     targetOnUpdate() {
-        const {summerTarget, notSummerTarget} = this.state;
-        this.props.updateTarget(summerTarget, notSummerTarget);
+        const {summerTarget, summerFee, notSummerTarget, notSummerFee} = this.state;
+        this.props.updateTarget(summerTarget, summerFee, notSummerTarget, notSummerFee);
         this.targetToggle();
     }
 
@@ -115,7 +117,9 @@ class Settings extends Component {
     render() {
         const {
             summerTarget,
+            summerFee,
             notSummerTarget,
+            notSummerFee,
             edit_device_name,
             edit_device_dataChnId,
             edit_device_V,
@@ -130,12 +134,20 @@ class Settings extends Component {
                     <ModalBody>
                         <Form>
                             <FormGroup>
-                                <Label>夏季月（度）</Label>
+                                <Label>夏季月用電量上限（度）</Label>
                                 <Input value={summerTarget} onChange={e => this.setState({summerTarget: e.target.value})} type="text"/>
                             </FormGroup>
                             <FormGroup>
-                                <Label>非夏季月（度）</Label>
+                                <Label>夏季月電費（元／度）</Label>
+                                <Input value={summerFee} onChange={e => this.setState({summerFee: e.target.value})} type="text"/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label>非夏季月用電量上限（度）</Label>
                                 <Input value={notSummerTarget} onChange={e => this.setState({notSummerTarget: e.target.value})} type="text"/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label>非夏季月電費（元／度）</Label>
+                                <Input value={notSummerFee} onChange={e => this.setState({notSummerFee: e.target.value})} type="text"/>
                             </FormGroup>
                         </Form>
                     </ModalBody>
@@ -171,17 +183,20 @@ class Settings extends Component {
                             <thead>
                                 <tr>
                                     <th>月份</th>
-                                    <th>目標用電量（度）</th>
+                                    <th>用電量上限（度）</th>
+                                    <th>電費（元／度）</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <th scope="row">夏季月(6 ~ 9)</th>
                                     <td>{this.props.target.summerTarget}</td>
+                                    <td>{this.props.target.summerFee}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">非夏季月</th>
                                     <td>{this.props.target.notSummerTarget}</td>
+                                    <td>{this.props.target.notSummerFee}</td>
                                 </tr>
                             </tbody>
                         </Table>

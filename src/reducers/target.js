@@ -1,9 +1,8 @@
 const defaultState = {
-    day_target: 17,
-    month_target: 17 * 31,
-    year_target: 17 * 31 * 12,
     summerTarget: 424,
+    summerFee: 6,
     notSummerTarget: 303,
+    notSummerFee: 3
 };
 
 export default function(state = defaultState, action) {

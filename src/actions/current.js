@@ -36,7 +36,7 @@ export function getOverview(type, start, end) {
                 for (let i = 0; i < len - 1; i++) {
                     p.kWh += (dataPoints[i + 1].recordedAt - dataPoints[i].recordedAt) * dataPoints[i].values.value;
                 }
-                p.kWh = Math.round(p.kWh / 1000 * device.V / 3600 / 1000 / 100) / 10;
+                p.kWh = Math.round(p.kWh / 1000 * device.V / 3600 / 1000) / 1000;
                 payload.push(p);
                 fecthed_num++;
                 if (fecthed_num === devices_num) {
@@ -60,11 +60,19 @@ export function getReport(type, start, end) {
         let devices_num = devices.length;
         let fecthed_num = 0;
         const index_string = type,
-            index_offset = parseInt(moment(start).format(index_string), 10);
+            index_start = parseInt(moment(start).format(index_string), 10),
+            index_end = parseInt(moment(end).format(index_string), 10);
         let payload = {
             name: {},
             data: []
         };
+
+        for (let i = 0, len = index_end - index_start + 1; i < len; i++) {
+            payload.data.push({
+                time: index_start + i
+            });
+        }
+
         for (let device of devices) {
             getCurrent(device.dataChnId, start, end).then(res => {
                 const {dataPoints} = res.data.dataChannels[0];
@@ -82,11 +90,8 @@ export function getReport(type, start, end) {
                     const next = moment(timestamp).format(index_string);
                     if (current !== next) {
                         if (current !== null) {
-                            const index = parseInt(current, 10) - index_offset;
-                            if (!payload.data[index])
-                                payload.data[index] = {};
-                            payload.data[index].time = index + index_offset;
-                            payload.data[index][device.dataChnId] = Math.round(sum / 1000 * device.V / 3600 / 1000 / 100) / 10;
+                            const index = parseInt(current, 10) - index_start;
+                            payload.data[index][device.dataChnId] = Math.round(sum / 1000 * device.V / 3600 / 1000) / 1000;
                         }
                         current = next;
                         sum = 0;
