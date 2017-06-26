@@ -29,14 +29,14 @@ export default class ReportItem extends Component {
                 marginLeft: 'auto',
                 marginRight: 'auto'
             }}>
-                <BarChart width={360} height={230} data={data} margin={{
+                <BarChart width={320} height={230} data={data} margin={{
                     top: 0,
-                    right: 40,
-                    left: 0,
+                    right: 20,
+                    left: -20,
                     bottom: 0
                 }}>
-                    <text x={40} y={20}>度</text>
-                    <text x={325} y={185}>{xunit}</text>
+                    <text x={20} y={20}>度</text>
+                    <text x={305} y={190}>{xunit}</text>
                     <XAxis dataKey="time"/>
                     <YAxis/>
                     <CartesianGrid strokeDasharray="3 3"/>

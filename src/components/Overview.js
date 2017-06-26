@@ -9,7 +9,6 @@ import {
     Card,
     CardBlock,
     CardHeader,
-    CardText,
     CardFooter,
     Button,
     Progress
@@ -127,7 +126,7 @@ class Overview extends Component {
                 alert.distance = '今年';
                 alert.time = moment().endOf('year').month() - moment().month();
                 alert.unit = '個月';
-                alert.totalFee = Math.round(alert.currentFee * moment().endOf('year').month() / moment().month());
+                alert.totalFee = Math.round(alert.currentFee * (moment().endOf('year').month() + 1) / (moment().month() + 1));
         }
         return (
             <div>
@@ -165,12 +164,10 @@ class Overview extends Component {
                                         <Tooltip/>
                                     </PieChart>
                                 </div>
-                                <CardText className="text-center">
-                                    <Progress multi>
-                                        <Progress bar color="success" value={Math.round(alert.currentFee * 100 / alert.totalFee)}>{`$${alert.currentFee}`}</Progress>
-                                    </Progress>
-                                    {`${alert.distance}電費：目前 ${alert.currentFee} 元，預估共 ${alert.totalFee} 元。`}
-                                </CardText>
+                                <Progress multi>
+                                    <Progress bar color="success" value={Math.round(alert.currentFee * 100 / alert.totalFee)}>{`$${alert.currentFee}`}</Progress>
+                                </Progress>
+                                <p className="text-center">{`${alert.distance}電費：目前 ${alert.currentFee} 元，預估共 ${alert.totalFee} 元。`}</p>
                             </CardBlock>
                             <CardFooter className="text-muted text-center">
                                 {`${overviewStart} ~ ${overviewEnd}`}
